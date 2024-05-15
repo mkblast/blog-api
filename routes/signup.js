@@ -20,7 +20,7 @@ Router.post("/signup",
     .isAlphanumeric()
     .withMessage("First name has non-alpahanumeric characters."),
 
-  body("username")
+  body("email")
     .trim()
     .isLength({ min: 1 })
     .isEmail()
@@ -39,7 +39,7 @@ Router.post("/signup",
         return res.status(400).json({ errors: errors.array() });
       }
 
-      const exist = await User.findOne({ username: req.body.username }).exec();
+      const exist = await User.findOne({ email: req.body.email }).exec();
       if (exist) {
         return res.status(400).json({ error: "User already exists" });
       }
@@ -49,7 +49,7 @@ Router.post("/signup",
       const user = new User({
         first_name: req.body.first_name,
         last_name: req.body.last_name,
-        username: req.body.username,
+        email: req.body.email,
         password: hashedPassword,
         author: false,
       });

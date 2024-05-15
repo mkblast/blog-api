@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const jwt = require('jsonwebtoken');
 
 const User = require("./models/user");
 
@@ -46,10 +45,6 @@ const routes = require("./routes/index");
 app.use("/", routes.posts);
 app.use("/", routes.signup);
 app.use("/", routes.login);
-
-app.get('/protected', passport.authenticate('jwt', { session: false }), (req, res) => {
-  res.json(req.user);
-});
 
 app.use((err, req, res, next) => {
   res.locals.message = err.message;

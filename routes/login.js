@@ -5,7 +5,7 @@ const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 
 Router.post("/login",
-  body("username")
+  body("email")
     .trim()
     .isLength({ min: 1 })
     .isEmail()
@@ -24,7 +24,7 @@ Router.post("/login",
         return res.status(400).json({ errors: errors.array() });
       }
 
-      const user = await User.findOne({ username: req.body.username }).exec();
+      const user = await User.findOne({ email: req.body.email }).exec();
 
       if (!user) {
         return res.status(401).json({ error: "User not found" });
