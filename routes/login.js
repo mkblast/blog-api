@@ -27,25 +27,25 @@ Router.post("/login",
       const user = await User.findOne({ email: req.body.email }).exec();
 
       if (!user) {
-        return res.status(401).json({ error: "User not found" });
+        return res.status(401).json({ error: "User not found." });
       }
 
       const match = await bcryptjs.compare(req.body.password, user.password);
 
       if (!match) {
-        return res.status(401).json({ error: "Password not match" });
+        return res.status(401).json({ error: "Password incorrect." });
       }
 
       const JWTSecret = process.env.JWT_SECRET;
 
       const token = jwt.sign(
-        { sub: user._id },
+        { id: user._id },
         JWTSecret,
         { expiresIn: 60 * 60 * 24 * 30 }
       );
 
 
-      res.status(200).json({ token });
+      res.status(200).json({ messgae: "Logged in successfully", token });
     } catch (err) {
       next(err)
     }

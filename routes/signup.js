@@ -34,7 +34,6 @@ Router.post("/signup",
   async (req, res, next) => {
     try {
       const errors = validationResult(req);
-      console.log(errors.array())
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
@@ -56,7 +55,7 @@ Router.post("/signup",
 
       await user.save()
 
-      return res.status(200).json({ status: "User registered" });
+      return res.status(200).json({ status: "User registered", user });
     } catch (err) {
       return next(err)
     }

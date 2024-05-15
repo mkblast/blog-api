@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
+const jwt = require('jsonwebtoken');
 
 const User = require("./models/user");
 
@@ -31,7 +32,7 @@ const opts = {
 }
 
 passport.use(new JwtStrategy(opts, async (jwtPayload, done) => {
-  const user = await User.findOne({ _id: jwtPayload.sub }).exec();
+  const user = await User.findOne({ _id: jwtPayload.id }).exec();
 
   if (user) {
     return done(null, user);
@@ -42,9 +43,27 @@ passport.use(new JwtStrategy(opts, async (jwtPayload, done) => {
 
 const routes = require("./routes/index");
 
-app.use("/", routes.posts);
 app.use("/", routes.signup);
 app.use("/", routes.login);
+
+function authenticate(req, res, next) {
+  passport.authenticate('jwt', { session: false }, (err, user, info) => {
+
+    if (err) return next(err);
+    if (!user) return res.status(403).json(info);
+
+    req.user = user;
+    next();
+  })(req, res, next);
+}
+
+app.route('/api/*')
+  .post(authenticate)
+  .put(authenticate)
+  .delete(authenticate);
+
+app.use("/api", routes.posts);
+
 
 app.use((err, req, res, next) => {
   res.locals.message = err.message;
