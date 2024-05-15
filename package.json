@@ -9,6 +9,9 @@
     "devstart": "nodemon",
     "serverstart": "DEBUG=blog-api:* npm start"
   },
+  "engines": {
+    "node": ">=16.17.1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mkblast/blog-api.git"
