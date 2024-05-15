@@ -268,7 +268,7 @@ Router.delete("/posts/:postId", validatePostId, async (req, res, next) => {
   }
 });
 
-Router.put("/posts/:postId/comments/:commentId", validatePostId, async (req, res, next) => {
+Router.delete("/posts/:postId/comments/:commentId", validatePostId, async (req, res, next) => {
   try {
     const comment = await Comment.findOne({
       _id: req.params.commentId,
@@ -285,7 +285,7 @@ Router.put("/posts/:postId/comments/:commentId", validatePostId, async (req, res
 
     await comment.deleteOne();
 
-    res.status(200).json({ message: "Posted updated successfully" });
+    res.status(200).json({ message: "Comment deleted successfully" });
   } catch (err) {
     next(err);
   }
