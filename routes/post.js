@@ -28,7 +28,7 @@ Router.get("/posts", async (req, res, next) => {
 
 Router.get("/posts/:postId", validatePostId, async (req, res, next) => {
   try {
-    const post = await Post.findOne({ _id: req.params.postId });
+    const post = await Post.findOne({ _id: req.params.postId }).exec();
 
     if (!post) {
       return res.status(404).json({ error: "Post not found" });
@@ -42,7 +42,7 @@ Router.get("/posts/:postId", validatePostId, async (req, res, next) => {
 
 Router.get("/posts/:postId/comments", validatePostId, async (req, res, next) => {
   try {
-    const comments = Comment.find({ post: req.params.postId }).sort({ date: -1 }).exec();
+    const comments = await Comment.find({ post: req.params.postId }).sort({ date: -1 }).exec();
 
     return res.status(200).json(comments);
   } catch (err) {
@@ -59,7 +59,7 @@ Router.get("/posts/:postId/comments/:commentId", validatePostId, async (req, res
       return res.status(400).json({ error: "Not a valid comment ID" });
     }
 
-    const comment = Comment.find({ _id: req.params.commentId, post: req.params.postId }).getFilter()
+    const comment = await Comment.findOne({ _id: req.params.commentId, post: req.params.postId }).exec();
 
     if (!comment) {
       return res.status(404).json({ error: "Comment not found" });
