@@ -13,7 +13,7 @@ function validatePostId(req, res, next) {
     return res.status(400).json({ error: "Not a valid post ID" });
   }
 
-  next();
+  return next();
 }
 
 Router.get("/posts", async (req, res, next) => {
@@ -46,7 +46,7 @@ Router.get("/posts/:postId/comments", validatePostId, async (req, res, next) => 
 
     return res.status(200).json(comments);
   } catch (err) {
-    next(err)
+    return next(err)
   }
 });
 
@@ -105,7 +105,7 @@ Router.post("/posts",
 
       res.status(200).json({ message: "Posted successfully", post });
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 );
@@ -142,7 +142,7 @@ Router.post("/posts/:postId/comments",
 
       res.status(200).json({ message: "Comment successfully", comment });
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 );
@@ -190,8 +190,7 @@ Router.put("/posts/:postId",
 
       res.status(200).json({ message: "Posted updated successfully", update });
     } catch (err) {
-      console.log(err)
-      next(err);
+      return next(err);
     }
   }
 );
@@ -237,9 +236,9 @@ Router.put("/posts/:postId/comments/:commentId",
         { new: true }
       ).getUpdate();
 
-      res.status(200).json({ message: "Posted updated successfully", update });
+      return res.status(200).json({ message: "Posted updated successfully", update });
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 );
@@ -262,9 +261,9 @@ Router.delete("/posts/:postId", validatePostId, async (req, res, next) => {
 
     await post.deleteOne()
 
-    res.status(200).json({ message: "Posted deleted successfully" });
+    return res.status(200).json({ message: "Posted deleted successfully" });
   } catch (err) {
-    next(err);
+    return next(err);
   }
 });
 
@@ -285,9 +284,9 @@ Router.delete("/posts/:postId/comments/:commentId", validatePostId, async (req, 
 
     await comment.deleteOne();
 
-    res.status(200).json({ message: "Comment deleted successfully" });
+    return res.status(200).json({ message: "Comment deleted successfully" });
   } catch (err) {
-    next(err);
+    return next(err);
   }
 });
 
