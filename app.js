@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const jwt = require('jsonwebtoken');
+const cors = require("cors")
 
 const User = require("./models/user");
 
@@ -18,6 +18,8 @@ async function main() {
 main().catch(e => console.log(e));
 
 const app = express();
+
+app.options("*", cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
