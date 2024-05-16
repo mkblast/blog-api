@@ -10,7 +10,7 @@ function validatePostId(req, res, next) {
   const isValid = mongoose.isValidObjectId(req.params.postId);
 
   if (!isValid) {
-    return res.status(400).json({ error: "Not a valid post ID" });
+    return res.status(404).json({ error: "Not a valid post ID" });
   }
 
   return next();
