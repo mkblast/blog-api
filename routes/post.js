@@ -36,7 +36,7 @@ Router.get("/posts/:postId", validatePostId, async (req, res, next) => {
 
     return res.status(200).json(post);
   } catch (err) {
-    return next(err)
+    return next(err);
   }
 });
 
@@ -46,7 +46,7 @@ Router.get("/posts/:postId/comments", validatePostId, async (req, res, next) => 
 
     return res.status(200).json(comments);
   } catch (err) {
-    return next(err)
+    return next(err);
   }
 });
 
@@ -88,9 +88,9 @@ Router.post("/posts",
         return res.status(401).json({ error: "Not an author" });
       }
 
-      const errors = validationResult(req)
+      const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() })
+        return res.status(400).json({ errors: errors.array() });
       }
 
       const post = new Post({
@@ -125,7 +125,7 @@ Router.post("/posts/:postId/comments",
 
   async (req, res, next) => {
     try {
-      const errors = validationResult(req)
+      const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
@@ -165,9 +165,9 @@ Router.put("/posts/:postId",
         return res.status(401).json({ error: "Not an author" });
       }
 
-      const errors = validationResult(req)
+      const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() })
+        return res.status(400).json({ errors: errors.array() });
       }
 
       const post = await Post.findOne({ _id: req.params.postId }).exec();
@@ -210,9 +210,9 @@ Router.put("/posts/:postId/comments/:commentId",
 
   async (req, res, next) => {
     try {
-      const errors = validationResult(req)
+      const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() })
+        return res.status(400).json({ errors: errors.array() });
       }
 
       const comment = await Comment.findOne({
