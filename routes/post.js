@@ -96,7 +96,7 @@ Router.post("/posts",
       const post = new Post({
         title: req.body.title,
         body: req.body.body,
-        author: req.user._id,
+        author: `${req.user.first_name} ${req.user.last_name}`,
         published_date: Date.now(),
       });
 
@@ -133,7 +133,7 @@ Router.post("/posts/:postId/comments",
       const comment = new Comment({
         title: req.body.title,
         body: req.body.body,
-        author: req.user._id,
+        author: `${req.user.first_name} ${req.user.last_name}`,
         post: req.params.postId,
         date: Date.now(),
       });
