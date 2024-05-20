@@ -9,6 +9,4 @@ const UserSchema = new Schema({
   author: { type: Schema.Types.Boolean, required: true },
 });
 
-UserSchema.virtual("name").get(function() {
-  return `${this.first_name} ${this.last_name}`
-});
+module.exports = mongoose.model("User", UserSchema);
