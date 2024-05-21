@@ -113,11 +113,6 @@ Router.post("/posts",
 Router.post("/posts/:postId/comments",
   validatePostId,
 
-  body("title")
-    .trim()
-    .isLength({ min: 1 })
-    .withMessage("Title must be provided"),
-
   body("body")
     .trim()
     .isLength({ min: 1 })
@@ -131,8 +126,8 @@ Router.post("/posts/:postId/comments",
       }
 
       const comment = new Comment({
-        title: req.body.title,
         body: req.body.body,
+        author_id: req.user._id,
         author: `${req.user.first_name} ${req.user.last_name}`,
         post: req.params.postId,
         date: Date.now(),
@@ -198,10 +193,6 @@ Router.put("/posts/:postId",
 
 Router.put("/posts/:postId/comments/:commentId",
   validatePostId,
-  body("title")
-    .trim()
-    .isLength({ min: 1 })
-    .withMessage("Title must be provided"),
 
   body("body")
     .trim()
@@ -230,7 +221,6 @@ Router.put("/posts/:postId/comments/:commentId",
 
       const update = comment.updateOne(
         {
-          title: req.body.title,
           body: req.body.body,
         },
         { new: true }
@@ -238,6 +228,7 @@ Router.put("/posts/:postId/comments/:commentId",
 
       return res.status(200).json({ message: "Posted updated successfully", update });
     } catch (err) {
+      console.log(err);
       return next(err);
     }
   }
@@ -278,7 +269,7 @@ Router.delete("/posts/:postId/comments/:commentId", validatePostId, async (req, 
       return res.status(404).json({ error: "Post not found" });
     }
 
-    if (!comment.author.equals(req.user._id)) {
+    if (!comment.author_id.equals(req.user._id)) {
       return res.status(401).json({ error: "Not authorized to delete this comment" });
     }
 
