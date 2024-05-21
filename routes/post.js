@@ -215,7 +215,7 @@ Router.put("/posts/:postId/comments/:commentId",
         return res.status(404).json({ error: "Post not found" });
       }
 
-      if (!comment.author.equals(req.user._id)) {
+      if (!comment.author_id.equals(req.user._id)) {
         return res.status(401).json({ error: "Not authorized to edit this comment" });
       }
 
