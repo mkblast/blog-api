@@ -228,7 +228,6 @@ Router.put("/posts/:postId/comments/:commentId",
 
       return res.status(200).json({ message: "Posted updated successfully", update });
     } catch (err) {
-      console.log(err);
       return next(err);
     }
   }
