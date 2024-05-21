@@ -40,7 +40,7 @@ Router.post("/signup",
 
       const exist = await User.findOne({ email: req.body.email }).exec();
       if (exist) {
-        return res.status(400).json({ error: "User already exists" });
+        return res.status(400).json({ errors: [{ msg: "User already exists" }] });
       }
 
       const hashedPassword = await bcryptjs.hash(req.body.password, 10);

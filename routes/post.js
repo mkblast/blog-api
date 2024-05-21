@@ -10,7 +10,7 @@ function validatePostId(req, res, next) {
   const isValid = mongoose.isValidObjectId(req.params.postId);
 
   if (!isValid) {
-    return res.status(404).json({ error: "Not a valid post ID" });
+    return res.status(404).json({ errors: [{ msg: "Not a valid post ID" }] });
   }
 
   return next();
@@ -31,7 +31,7 @@ Router.get("/posts/:postId", validatePostId, async (req, res, next) => {
     const post = await Post.findOne({ _id: req.params.postId }).exec();
 
     if (!post) {
-      return res.status(404).json({ error: "Post not found" });
+      return res.status(404).json({ errors: [{ msg: "Post not found" }] });
     }
 
     return res.status(200).json(post);
@@ -56,13 +56,13 @@ Router.get("/posts/:postId/comments/:commentId", validatePostId, async (req, res
 
 
     if (!isValidComment) {
-      return res.status(400).json({ error: "Not a valid comment ID" });
+      return res.status(400).json({ errors: [{ msg: "Not a valid comment ID" }] });
     }
 
     const comment = await Comment.findOne({ _id: req.params.commentId, post: req.params.postId }).exec();
 
     if (!comment) {
-      return res.status(404).json({ error: "Comment not found" });
+      return res.status(404).json({ errors: [{ msg: "Comment not found" }] });
     }
 
     res.status(200).json(comment);
@@ -85,7 +85,7 @@ Router.post("/posts",
   async (req, res, next) => {
     try {
       if (!req.user.author) {
-        return res.status(401).json({ error: "Not an author" });
+        return res.status(401).json({ errors: [{ msg: "Not an author" }] });
       }
 
       const errors = validationResult(req);
@@ -157,7 +157,7 @@ Router.put("/posts/:postId",
   async (req, res, next) => {
     try {
       if (!req.user.author) {
-        return res.status(401).json({ error: "Not an author" });
+        return res.status(401).json({ errors: "Not an author" });
       }
 
       const errors = validationResult(req);
@@ -168,11 +168,11 @@ Router.put("/posts/:postId",
       const post = await Post.findOne({ _id: req.params.postId }).exec();
 
       if (!post) {
-        return res.status(404).json({ error: "Post not found" });
+        return res.status(404).json({ errors: "Post not found" });
       }
 
       if (!post.author.equals(req.user._id)) {
-        return res.status(401).json({ error: "Not authorized to edit this post" });
+        return res.status(401).json({ errors: "Not authorized to edit this post" });
       }
 
       const update = post.updateOne(
@@ -212,11 +212,11 @@ Router.put("/posts/:postId/comments/:commentId",
       }).exec();
 
       if (!comment) {
-        return res.status(404).json({ error: "Post not found" });
+        return res.status(404).json({ errors: "Post not found" });
       }
 
       if (!comment.author_id.equals(req.user._id)) {
-        return res.status(401).json({ error: "Not authorized to edit this comment" });
+        return res.status(401).json({ errors: [{ msg: "Not authorized to edit this comment" }] });
       }
 
       const update = comment.updateOne(
@@ -236,17 +236,17 @@ Router.put("/posts/:postId/comments/:commentId",
 Router.delete("/posts/:postId", validatePostId, async (req, res, next) => {
   try {
     if (!req.user.author) {
-      return res.status(401).json({ error: "Not an author" });
+      return res.status(401).json({ errors: [{ msg: "Not an author" }] });
     }
 
     const post = await Post.findOne({ _id: req.params.postId }).exec();
 
     if (!post) {
-      return res.status(404).json({ error: "Post not found" });
+      return res.status(404).json({ errors: [{ msg: "Post not found" }] });
     }
 
     if (!post.author.equals(req.user._id)) {
-      return res.status(401).json({ error: "Not authorized to delete this post" });
+      return res.status(401).json({ errors: [{ msg: "Not authorized to delete this post" }] });
     }
 
     await post.deleteOne()
@@ -265,11 +265,11 @@ Router.delete("/posts/:postId/comments/:commentId", validatePostId, async (req, 
     }).exec();
 
     if (!comment) {
-      return res.status(404).json({ error: "Post not found" });
+      return res.status(404).json({ errors: [{ msg: "Post not found" }] });
     }
 
     if (!comment.author_id.equals(req.user._id)) {
-      return res.status(401).json({ error: "Not authorized to delete this comment" });
+      return res.status(401).json({ errors: [{ msg: "Not authorized to delete this comment" }] });
     }
 
     await comment.deleteOne();
