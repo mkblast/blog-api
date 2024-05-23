@@ -27,13 +27,13 @@ Router.post("/login",
       const user = await User.findOne({ email: req.body.email }).exec();
 
       if (!user) {
-        return res.status(401).json({ error: "User not found." });
+        return res.status(401).json({ errors: [{ msg: "User not found." }] });
       }
 
       const match = await bcryptjs.compare(req.body.password, user.password);
 
       if (!match) {
-        return res.status(401).json({ error: "Password incorrect." });
+        return res.status(401).json({ error: [{ msg: "Password incorrect." }] });
       }
 
       const JWTSecret = process.env.JWT_SECRET;
@@ -43,7 +43,6 @@ Router.post("/login",
         JWTSecret,
         { expiresIn: 60 * 60 * 24 * 30 }
       );
-
 
       res.status(200).json({ messgae: "Logged in successfully", token });
     } catch (err) {
