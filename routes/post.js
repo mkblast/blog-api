@@ -176,13 +176,14 @@ Router.put("/posts/:postId",
         return res.status(401).json({ errors: "Not authorized to edit this post" });
       }
 
-      const update = post.updateOne(
+      const update = await Post.findOneAndUpdate(
+        { _id: req.params.postId },
         {
           title: req.body.title,
           body: req.body.body,
         },
         { new: true }
-      ).getUpdate();
+      ).exec();
 
       res.status(200).json({ message: "Posted updated successfully", update });
     } catch (err) {
@@ -220,15 +221,15 @@ Router.put("/posts/:postId/comments/:commentId",
         return res.status(401).json({ errors: [{ msg: "Not authorized to edit this comment" }] });
       }
 
-      const update = comment.updateOne(
-        {
-          body: req.body.body,
-        },
+      const update = await Comment.findOneAndUpdate(
+        { _id: req.params.commentId },
+        { body: req.body.body },
         { new: true }
-      ).getUpdate();
+      ).exec();
 
       return res.status(200).json({ message: "Posted updated successfully", update });
     } catch (err) {
+      console.log(err)
       return next(err);
     }
   }
