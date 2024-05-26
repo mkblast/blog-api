@@ -66,6 +66,7 @@ app.route('/api/*')
 
 app.use("/api", routes.posts);
 
+app.use("/api", authenticate, routes.users);
 
 app.use((err, req, res, next) => {
   res.locals.message = err.message;

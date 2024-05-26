@@ -137,6 +137,7 @@ Router.post("/posts/:postId/comments",
 
       res.status(200).json({ message: "Comment successfully", comment });
     } catch (err) {
+      console.log(err);
       return next(err);
     }
   }
